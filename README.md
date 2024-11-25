@@ -2,8 +2,8 @@
 This repository provides functions to work Python `objects`, `dictionaries`, and `JSON`
 
 ## 🔨 Functionalities 
-- [clean_dict.py](https://github.com/albertolicea00/python-obj-dict-helper/blob/main/helpers/clean_dict.py) :  Clean a dictionary by removing keys with empty values (`None`, `[]`, `""`). Recursively clean nested dictionaries and lists
-- [serializers.py](https://github.com/albertolicea00/python-obj-dict-helper/tree/main/serializers) :  Provides functions to `convert Python objects to dictionaries`, omitting specified attributes and applying custom modifications to the keys and attribute values.
+- [clean_dict.py](https://github.com/albertolicea00/python-obj-dict-helpers/blob/main/helpers/clean_dict.py) :  Clean a dictionary by removing keys with empty values (`None`, `[]`, `""`). Recursively clean nested dictionaries and lists
+- [serializers.py](https://github.com/albertolicea00/python-obj-dict-helpers/tree/main/serializers) :  Provides functions to `convert Python objects to dictionaries`, omitting specified attributes and applying custom modifications to the keys and attribute values.
 
 <i>more are comming soon...</i>
 
@@ -17,8 +17,8 @@ If you have ideas for new features, improvements, or bug fixes, please feel free
 
 ### Thanks to the following people who have contributed to this project:
 
-<a href="https://github.com/albertolicea00/python-obj-dict-helper/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=albertolicea00/python-obj-dict-helper" />
+<a href="https://github.com/albertolicea00/python-obj-dict-helpers/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=albertolicea00/python-obj-dict-helpers" />
 </a>
 
 <sub>Made with [contrib.rocks](https://contrib.rocks).</sub>
