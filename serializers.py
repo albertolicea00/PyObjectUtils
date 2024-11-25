@@ -1,4 +1,5 @@
-def object_to_dict(obj, seen=None, attributes_to_omit=None):
+
+def object_to_dict(obj, seen=None, attributes_to_omit=None, modifications=None):
     """
     Convert a Python object to a dictionary, omitting specified attributes and handling nested objects.
 
@@ -8,6 +9,8 @@ def object_to_dict(obj, seen=None, attributes_to_omit=None):
                               This parameter is used internally during recursive calls.
         attributes_to_omit (set or list, optional): A set or list of attribute names to omit from the dictionary.
                                                      Defaults to {"_setattrs"} if not provided.
+        modifications (list of tuples, optional): A list of tuples where each tuple contains a condition and a function
+                                                  to modify the value if the condition is met. also a 3rd element to import the required module
 
     Returns:
         dict: A dictionary representation of the object, excluding specified attributes and null values.
@@ -16,7 +19,11 @@ def object_to_dict(obj, seen=None, attributes_to_omit=None):
     Example:
         >>> customer = Customer()  # Assuming Customer is a defined class with attributes
         >>> attributes_to_omit = {"config, gateway"}
-        >>> customer_dict = object_to_dict(customer, attributes_to_omit=attributes_to_omit)
+        >>> modifications = [
+        >>>     ("'key' == 'name'", lambda x: x.uppercase()),
+        >>>     ("isinstance(value, datetime)", lambda x: x.isoformat(),"from datetime import datetime")
+        >>> ]
+        >>> customer_dict = object_to_dict(customer, attributes_to_omit=attributes_to_omit, modifications=modifications)
     """
     default_attributes_to_omit = {"_setattrs"}
     if seen is None:
@@ -46,13 +53,22 @@ def object_to_dict(obj, seen=None, attributes_to_omit=None):
             if isinstance(value, (list, set, tuple)):
                 # Filter out null values when constructing the list
                 dictionary[key] = [
-                    object_to_dict(i, seen, attributes_to_omit)
+                    object_to_dict(i, seen, attributes_to_omit, modifications)
                     for i in value
                     if i is not None
                 ]
             elif hasattr(value, "__dict__"):
-                dictionary[key] = object_to_dict(value, seen, attributes_to_omit)
+                dictionary[key] = object_to_dict(
+                    value, seen, attributes_to_omit, modifications
+                )
             else:
+                # Apply modifications if any
+                for condition, func, module in modifications:
+                    exec(module)
+                    if eval(condition):
+                        value = func(value)
+                        break
+
                 # Only add non-null attributes
                 if value is not None:
                     dictionary[key] = value
@@ -61,7 +77,7 @@ def object_to_dict(obj, seen=None, attributes_to_omit=None):
     return obj  # If it doesn't have __dict__, return the original object
 
 
-def object_list_to_dict(object_list, attributes_to_omit=None):
+def object_list_to_dict(object_list, attributes_to_omit=None, modifications=None):
     """
     Convert a list of Python objects to a list of dictionaries, omitting specified attributes from each object.
 
@@ -69,6 +85,8 @@ def object_list_to_dict(object_list, attributes_to_omit=None):
         object_list (list): A list of objects to be converted to dictionaries.
         attributes_to_omit (set or list, optional): A set or list of attribute names to omit from the dictionaries.
                                                      If not provided, defaults to None.
+        modifications (list of tuples, optional): A list of tuples where each tuple contains a condition and a function
+                                                  to modify the value if the condition is met. also a 3rd element to import the required module
 
     Returns:
         list: A list of dictionaries representing the objects, each excluding the specified attributes and
@@ -77,10 +95,16 @@ def object_list_to_dict(object_list, attributes_to_omit=None):
     Example:
         >>> customer_list = [Customer1(), Customer2()]  # Assuming Customer1 and Customer2 are defined classes
         >>> attributes_to_omit = {"config", "gateway", "sensitive_info"}
+        >>> modifications = [
+        >>>     ("'key' == 'name'", lambda x: x.uppercase()),
+        >>>     ("isinstance(value, datetime)", lambda x: x.isoformat(),"from datetime import datetime")
+        >>> ]
         >>> customers_dict = object_list_to_dict(customer_list, attributes_to_omit=attributes_to_omit)
     """
     retorno = [
-        object_to_dict(obj, attributes_to_omit=attributes_to_omit)
+        object_to_dict(
+            obj, attributes_to_omit=attributes_to_omit, modifications=modifications
+        )
         for obj in object_list
     ]
     return retorno
