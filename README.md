@@ -26,11 +26,11 @@ This enumeration defines several utility tuples for modifications. Each tuple co
 3. **Import Statement**: A string containing the necessary import statement for the modification.
 
 **Available Values**:
-- **DATETIME_TO_STRING**
-- **STRIP_WHITESPACE**
-- **TO_UPPERCASE**
-- **TO_LOWERCASE**
-- **ROUND_FLOAT**
+- **DATETIME_TO_STRING**: Converts `datetime` objects to ISO format strings.
+- **STRIP_WHITESPACE**: Strips leading and trailing whitespace from strings.
+- **TO_UPPERCASE**: Converts strings to uppercase.
+- **TO_LOWERCASE**: Converts strings to lowercase.
+- **ROUND_FLOAT**: Rounds float values to two decimal places.
 
 ## 🛠️ Functions
 
