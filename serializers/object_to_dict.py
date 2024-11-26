@@ -63,11 +63,12 @@ def object_to_dict(obj, seen=None, attributes_to_omit=None, modifications=None):
                 )
             else:
                 # Apply modifications if any
-                for condition, func, module in modifications:
-                    exec(module)
-                    if eval(condition):
-                        value = func(value)
-                        break
+                if modifications:
+                    for condition, func, module in modifications:
+                        exec(module)
+                        if eval(condition):
+                            value = func(value)
+                            break
 
                 # Only add non-null attributes
                 if value is not None:
